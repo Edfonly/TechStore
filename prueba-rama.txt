@@ -1,1 +1,2 @@
 Prueba de flujo Git
+Prueba de bloqueo de PR directo a master
