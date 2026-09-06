@@ -1,0 +1,25 @@
+name: Proteccion master
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  validar-origen-master:
+    name: validar-origen-master
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verificar rama de origen
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          echo "Rama origen: $HEAD_REF"
+
+          if [ "$HEAD_REF" != "develop" ]; then
+            echo "ERROR: master solo acepta Pull Requests desde develop."
+            exit 1
+          fi
+
+          echo "OK: el Pull Request viene desde develop."
