@@ -6,8 +6,8 @@ export function correrNewman(nombreDeLaCarpeta: string): Promise<any> {
 
     return new Promise((resolve, reject) => {
         newman.run({
-            collection: path.join(CARPETA_NEWMAN, 'ReqresIn_collection.json'),
-            environment: path.join(CARPETA_NEWMAN, 'ReqresIn_environment.json'),
+            collection: path.join(CARPETA_NEWMAN, 'TechStore.postman_collection.json'),
+            environment: path.join(CARPETA_NEWMAN, 'TechStore.postman_environment.json'),
             folder: nombreDeLaCarpeta ? nombreDeLaCarpeta : undefined
         }, (error, resumen) => {
             if (error) {
