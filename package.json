@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
+    "clean:reports": "rm -rf allure-results allure-report playwright-report test-results",
     "report:generate": "allure generate allure-results --clean -o allure-report",
     "report:open": "allure open allure-report"
   },
