@@ -14,7 +14,7 @@ test.describe('Pruebas de Login', () => {
       loginData.admin.password
     );
 
-    await loginPage.validarRol(loginData.admin.role);
+    await loginPage.validarRol(loginData.admin.expectedRole);
   });
 
 
@@ -28,7 +28,7 @@ test.describe('Pruebas de Login', () => {
       loginData.manager.password
     );
 
-    await loginPage.validarRol(loginData.manager.role);
+    await loginPage.validarRol(loginData.manager.expectedRole);
   });
 
 
@@ -42,7 +42,7 @@ test.describe('Pruebas de Login', () => {
       loginData.customer.password
     );
 
-    await loginPage.validarRol(loginData.customer.role);
+    await loginPage.validarRol(loginData.customer.expectedRole);
   });
 
 
