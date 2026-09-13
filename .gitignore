@@ -1,6 +1,9 @@
 # Dependencias
 node_modules/
 
+# Variables de entorno
+.env
+
 # Playwright
 test-results/
 playwright-report/
@@ -11,6 +14,9 @@ playwright/.auth/
 # Allure
 allure-results/
 allure-report/
+
+# VS Code
+.vscode/
 
 # Sistema / editor
 .DS_Store
