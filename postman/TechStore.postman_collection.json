@@ -1,12 +1,151 @@
 {
   "info": {
-    "_postman_id": "2ff228a3-da6e-4878-96c2-fcb131a569f4",
+    "_postman_id": "87052440-6610-4291-b8e2-db076806bed2",
     "name": "TechStore",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "55434504",
-    "_collection_link": "https://go.postman.co/collection/55434504-2ff228a3-da6e-4878-96c2-fcb131a569f4?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/55434504-87052440-6610-4291-b8e2-db076806bed2?source=collection_link"
   },
   "item": [
+    {
+      "name": "StoreReset",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/test/reset",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "test",
+            "reset"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedRole = pm.variables.get(\"expectedRole\");",
+              "const expectedError = pm.variables.get(\"expectedError\");",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "if (expectedStatus === 200) {",
+              "",
+              "    pm.test(\"El rol es correcto\", function () {",
+              "        pm.expect(response.user.role).to.eql(expectedRole);",
+              "    });",
+              "",
+              "} else {",
+              "",
+              "    pm.test(\"El mensaje de error es correcto\", function () {",
+              "        pm.expect(response.error).to.eql(expectedError);",
+              "    });",
+              "",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "content-type",
+            "value": "application/json"
+          },
+          {
+            "key": "origin",
+            "value": "https://techstore-demo-05ad.onrender.com"
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\":\"{{username}}\",\n    \"password\":\"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
     {
       "name": "ObtenerProductos",
       "event": [
@@ -14,12 +153,23 @@
           "listen": "test",
           "script": {
             "exec": [
+              "const response = pm.response.json();",
+              "",
               "pm.test(\"Status code es 200\", function () {",
               "    pm.response.to.have.status(200);",
               "});",
               "",
               "pm.test(\"La respuesta contiene JSON\", function () {",
               "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"La respuesta es un array\", function () {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene 10 productos\", function () {",
+              "    pm.expect(response.length).to.eql(10);",
               "});"
             ],
             "type": "text/javascript",
@@ -81,7 +231,372 @@
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/api/products?",
+          "raw": "{{baseUrl}}/api/products/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RegistrarProducto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedError = pm.variables.get(\"expectedError\");",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "if (expectedStatus === 201) {",
+              "",
+              "    const requestBody = JSON.parse(pm.variables.get(\"requestBody\"));",
+              "",
+              "    pm.test(\"El producto fue creado con ID\", function () {",
+              "        pm.expect(response.id).to.exist;",
+              "        pm.expect(response.id).to.be.a(\"number\");",
+              "        pm.expect(response.id).to.be.above(0);",
+              "    });",
+              "",
+              "    pm.test(\"Los datos del producto son correctos\", function () {",
+              "        pm.expect(response.name).to.eql(requestBody.name);",
+              "        pm.expect(response.description).to.eql(requestBody.description);",
+              "        pm.expect(response.price).to.eql(requestBody.price);",
+              "        pm.expect(response.category).to.eql(requestBody.category);",
+              "        pm.expect(response.stock).to.eql(requestBody.stock);",
+              "    });",
+              "",
+              "    pm.environment.set(\"productId\", response.id);",
+              "",
+              "} else {",
+              "",
+              "    pm.test(\"El mensaje de error es correcto\", function () {",
+              "        pm.expect(response.error).to.eql(expectedError);",
+              "    });",
+              "",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{{requestBody}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ObtenerProducto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedError = pm.variables.get(\"expectedError\");",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "if (expectedStatus === 200) {",
+              "",
+              "    pm.test(\"El producto tiene ID\", function () {",
+              "        pm.expect(response.id).to.exist;",
+              "        pm.expect(response.id).to.be.a(\"number\");",
+              "    });",
+              "",
+              "    pm.test(\"El producto tiene los campos principales\", function () {",
+              "        pm.expect(response).to.have.property(\"name\");",
+              "        pm.expect(response).to.have.property(\"description\");",
+              "        pm.expect(response).to.have.property(\"price\");",
+              "        pm.expect(response).to.have.property(\"category\");",
+              "        pm.expect(response).to.have.property(\"stock\");",
+              "    });",
+              "",
+              "} else {",
+              "",
+              "    pm.test(\"El mensaje de error es correcto\", function () {",
+              "        pm.expect(response.error).to.eql(expectedError);",
+              "    });",
+              "",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "if-none-match",
+            "value": "W/\"272d-DBR7o3cuUbbOceN9PmUt8DNq+qE\""
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "EliminarProducto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedError = pm.variables.get(\"expectedError\");",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "if (expectedStatus === 404) {",
+              "",
+              "    const response = pm.response.json();",
+              "",
+              "    pm.test(\"La respuesta contiene JSON\", function () {",
+              "        pm.response.to.be.json;",
+              "    });",
+              "",
+              "    pm.test(\"El mensaje de error es correcto\", function () {",
+              "        pm.expect(response.error).to.eql(expectedError);",
+              "    });",
+              "",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "BuscarProducto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedCount = Number(pm.variables.get(\"expectedCount\"));",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"La respuesta es un array\", function () {",
+              "    pm.expect(response).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.test(\"La cantidad de productos encontrados es correcta\", function () {",
+              "    pm.expect(response.length).to.eql(expectedCount);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "if-none-match",
+            "value": "W/\"3db-Q0FJ2t+FOcfoJyfYvMzNLXq5mts\""
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/products?search={{search}}",
           "host": [
             "{{baseUrl}}"
           ],
@@ -91,13 +606,1037 @@
           ],
           "query": [
             {
-              "key": "",
-              "value": null
+              "key": "search",
+              "value": "{{search}}"
             }
           ]
         }
       },
       "response": []
+    },
+    {
+      "name": "FiltrarCategoria",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedCategory = pm.variables.get(\"expectedCategory\");",
+              "const expectedCount = Number(pm.variables.get(\"expectedCount\"));",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta es un array\", function () {",
+              "    pm.expect(response).to.be.an(\"array\");",
+              "});",
+              "",
+              "if (expectedCount === 0) {",
+              "",
+              "    pm.test(\"No se encontraron productos\", function () {",
+              "        pm.expect(response.length).to.eql(0);",
+              "    });",
+              "",
+              "} else {",
+              "",
+              "    pm.test(\"Los productos pertenecen a la categoría correcta\", function () {",
+              "        response.forEach(producto => {",
+              "            pm.expect(producto.category).to.eql(expectedCategory);",
+              "        });",
+              "    });",
+              "",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "if-none-match",
+            "value": "W/\"3db-Q0FJ2t+FOcfoJyfYvMzNLXq5mts\""
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/products?category={{category}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products"
+          ],
+          "query": [
+            {
+              "key": "category",
+              "value": "{{category}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ObtenerOfertas",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "pm.test(\"Status code es 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"La respuesta es un array\", function () {",
+              "    pm.expect(response).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.test(\"Los productos tienen descuento\", function () {",
+              "    response.forEach(producto => {",
+              "        pm.expect(producto.price).to.be.below(producto.originalPrice);",
+              "    });",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene 7 productos\", function () {",
+              "    pm.expect(response.length).to.eql(7);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "if-none-match",
+            "value": "W/\"3db-Q0FJ2t+FOcfoJyfYvMzNLXq5mts\""
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/products/deals",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            "deals"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "EditarProducto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "if (expectedStatus === 200) {",
+              "",
+              "    const requestBody = JSON.parse(pm.variables.get(\"requestBody\"));",
+              "",
+              "    pm.test(\"Los datos fueron actualizados correctamente\", function () {",
+              "",
+              "        Object.keys(requestBody).forEach(campo => {",
+              "            pm.expect(response[campo]).to.eql(requestBody[campo]);",
+              "        });",
+              "",
+              "    });",
+              "",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "if-none-match",
+            "value": "W/\"272d-DBR7o3cuUbbOceN9PmUt8DNq+qE\""
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{requestBody}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ObtenerCategorias",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "pm.test(\"Status code es 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"La respuesta es un array\", function () {",
+              "    pm.expect(response).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene 6 categorías\", function () {",
+              "    pm.expect(response.length).to.eql(6);",
+              "});",
+              "",
+              "pm.test(\"Las categorías están ordenadas alfabéticamente\", function () {",
+              "    const ordenadas = [...response].sort();",
+              "    pm.expect(response).to.eql(ordenadas);",
+              "});",
+              "",
+              "pm.test(\"No existen categorías duplicadas\", function () {",
+              "    const categoriasUnicas = new Set(response);",
+              "    pm.expect(categoriasUnicas.size).to.eql(response.length);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "if-none-match",
+            "value": "W/\"3db-Q0FJ2t+FOcfoJyfYvMzNLXq5mts\""
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/categories",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categories"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AgregarProductoCarrito",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedError = pm.variables.get(\"expectedError\");",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "if (expectedStatus === 201) {",
+              "    pm.test(\"El producto fue agregado al carrito\", function () {",
+              "        pm.expect(response).to.exist;",
+              "    });",
+              "} else {",
+              "    pm.test(\"El mensaje de error es correcto\", function () {",
+              "        pm.expect(response.error).to.eql(expectedError);",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{{requestBody}}\n\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/items",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "cart",
+            "items"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CarritoVacio",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "pm.test(\"Status code es 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"El mensaje de error es correcto\", function () {",
+              "    pm.expect(response.error).to.eql(\"El carrito está vacío\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \n    \"customer\": \"admin\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/orders",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CrearPedido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "pm.test(\"Status code es 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"El mensaje de error es correcto\", function () {",
+              "    pm.expect(response.error).to.eql(\"El carrito está vacío\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"productId\": 4,\n    \"quantity\": 2\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/items",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "cart",
+            "items"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ObtenerPedido",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/orders/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "orders",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ConsultarPedidoInexistente",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "CheckoutSinCustomer",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "ObtenerFavoritos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedCount = Number(pm.variables.get(\"expectedCount\"));",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"La respuesta es un array\", function () {",
+              "    pm.expect(response).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.test(\"La cantidad de favoritos es correcta\", function () {",
+              "    pm.expect(response.length).to.eql(expectedCount);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "if-none-match",
+            "value": "W/\"3db-Q0FJ2t+FOcfoJyfYvMzNLXq5mts\""
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/favorites",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "favorites"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AgregarFavorito",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedError = pm.variables.get(\"expectedError\");",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "if (expectedStatus === 201) {",
+              "    const requestBody = JSON.parse(",
+              "        pm.variables.get(\"requestBody\")",
+              "    );",
+              "    pm.test(\"La respuesta es un array\", function () {",
+              "        pm.expect(response).to.be.an(\"array\");",
+              "    });",
+              "    pm.test(\"El producto fue agregado a favoritos\", function () {",
+              "        const existeProducto = response.some(",
+              "            producto => producto.id === requestBody.productId",
+              "        );",
+              "        pm.expect(existeProducto).to.eql(true);",
+              "    });",
+              "} else {",
+              "    pm.test(\"El mensaje de error es correcto\", function () {",
+              "        pm.expect(response.error).to.eql(expectedError);",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "if-none-match",
+            "value": "W/\"3db-Q0FJ2t+FOcfoJyfYvMzNLXq5mts\""
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{requestBody}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/favorites",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "favorites"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "EliminarFavorito",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "const expectedStatus = Number(pm.variables.get(\"expectedStatus\"));",
+              "const expectedError = pm.variables.get(\"expectedError\");",
+              "const productId = Number(pm.variables.get(\"productId\"));",
+              "",
+              "pm.test(\"Status code correcto\", function () {",
+              "    pm.response.to.have.status(expectedStatus);",
+              "});",
+              "",
+              "pm.test(\"La respuesta contiene JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "if (expectedStatus === 200) {",
+              "    pm.test(\"La respuesta es un array\", function () {",
+              "        pm.expect(response).to.be.an(\"array\");",
+              "    });",
+              "    pm.test(\"El producto fue eliminado de favoritos\", function () {",
+              "        const existeProducto = response.some(",
+              "            producto => producto.id === productId",
+              "        );",
+              "        pm.expect(existeProducto).to.eql(false);",
+              "    });",
+              "} else {",
+              "    pm.test(\"El mensaje de error es correcto\", function () {",
+              "        pm.expect(response.error).to.eql(expectedError);",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "accept-language",
+            "value": "es-ES,es;q=0.9"
+          },
+          {
+            "key": "if-none-match",
+            "value": "W/\"3db-Q0FJ2t+FOcfoJyfYvMzNLXq5mts\""
+          },
+          {
+            "key": "priority",
+            "value": "u=1, i"
+          },
+          {
+            "key": "referer",
+            "value": "https://techstore-demo-05ad.onrender.com/"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Linux\""
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "empty"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "cors"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/favorites/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "favorites",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "productosRandom",
+      "value": ""
     }
   ]
 }
