@@ -1,43 +1,33 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
 export class LoginPage {
+
   readonly page: Page;
-  readonly usernameInput: Locator;
-  readonly passwordInput: Locator;
-  readonly loginButton: Locator;
-  readonly currentRole: Locator;
-  readonly loginError: Locator;
+  readonly errorMessage: Locator;
+  readonly requiredMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
 
-    this.usernameInput = page.getByTestId('username-input');
-    this.passwordInput = page.getByTestId('password-input');
-    this.loginButton = page.getByTestId('login-button');
-    this.currentRole = page.getByTestId('current-role');
-    this.loginError = page.getByTestId('login-error');
+    // Mensaje para credenciales incorrectas.
+    this.errorMessage = page.getByText('Credenciales inválidas');
+
+    // Mensaje para campos vacíos.
+    this.requiredMessage = page.getByText('username y password son obligatorios');
   }
 
-  async irPagina(): Promise<void> {
-    await this.page.goto('https://techstore-demo-05ad.onrender.com/');
-  }
+  async login(username: string, password: string) {
 
-  async iniciarSesion(
-    username: string,
-    password: string
-  ): Promise<void> {
-    await this.usernameInput.fill(username);
-    await this.passwordInput.fill(password);
-    await this.loginButton.click();
-  }
+    await this.page
+      .getByTestId('username-input')
+      .fill(username);
 
-  async validarRol(rol: string): Promise<void> {
-    await expect(this.currentRole).toBeVisible();
-    await expect(this.currentRole).toHaveText(rol);
-  }
+    await this.page
+      .getByTestId('password-input')
+      .fill(password);
 
-  async validarCredencialesInvalidas(): Promise<void> {
-    await expect(this.loginError).toBeVisible();
-    await expect(this.loginError).toHaveText('Credenciales inválidas');
+    await this.page
+      .getByTestId('login-button')
+      .click();
   }
 }
