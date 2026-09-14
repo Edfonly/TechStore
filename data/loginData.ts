@@ -1,30 +1,5 @@
 import { env } from "process";
 
-// export const loginData = {
-//   admin: {
-//     username: env.ADMIN_USERNAME,
-//     password: env.ADMIN_PASSWORD,
-//     role: 'admin',
-//   },
-
-//   manager: {
-//     username: env.MANAGER_USERNAME,
-//     password: env.MANAGER_PASSWORD,
-//     role: 'manager',
-//   },
-
-//   customer: {
-//     username: env.CUSTOMER_USERNAME,
-//     password: env.CUSTOMER_PASSWORD,
-//     role: 'customer',
-//   },
-
-//   credencialesInvalidas: {
-//     username: 'usuarioIncorrecto',
-//     password: 'passwordIncorrecto',
-//   },
-// };
-
 export const loginData = {
 
     admin: {
